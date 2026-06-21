@@ -25,6 +25,11 @@ import { dirname, join } from "node:path";
 import { getInfoInput, handleGetInfo } from "./tools/get-info.js";
 import { extractTextInput, handleExtractText } from "./tools/extract-text.js";
 import { searchInput, handleSearch } from "./tools/search.js";
+import { splitInput, handleSplit } from "./tools/split.js";
+import { mergeInput, handleMerge } from "./tools/merge.js";
+import { pagesInput, handlePages } from "./tools/pages.js";
+import { toImagesInput, handleToImages } from "./tools/to-images.js";
+import { extractImagesInput, handleExtractImages } from "./tools/extract-images.js";
 
 // Read version from package.json so we report it consistently.
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -68,6 +73,61 @@ server.registerTool(
     inputSchema: searchInput,
   },
   async (args) => handleSearch(args),
+);
+
+server.registerTool(
+  "split",
+  {
+    title: "Split PDF",
+    description:
+      "Split a PDF into multiple PDFs by page ranges. Each range becomes one output file written into outputDir.",
+    inputSchema: splitInput,
+  },
+  async (args) => handleSplit(args),
+);
+
+server.registerTool(
+  "merge",
+  {
+    title: "Merge PDFs",
+    description:
+      "Combine two or more PDFs into one, preserving page order. Outputs to a caller-specified path.",
+    inputSchema: mergeInput,
+  },
+  async (args) => handleMerge(args),
+);
+
+server.registerTool(
+  "pages",
+  {
+    title: "Edit pages (rotate / delete / reorder)",
+    description:
+      "One-pass page editor. Delete pages, rotate specific pages by 90°/180°/270°, and reorder the result — in any combination. Page numbers in `rotate` refer to the SOURCE PDF; `reorder` refers to post-delete positions.",
+    inputSchema: pagesInput,
+  },
+  async (args) => handlePages(args),
+);
+
+server.registerTool(
+  "to_images",
+  {
+    title: "Render pages to images",
+    description:
+      "Rasterize PDF pages as PNG or JPG at a chosen DPI. Useful for previews, OCR pipelines, or feeding pages back to a vision model.",
+    inputSchema: toImagesInput,
+  },
+  async (args) => handleToImages(args),
+);
+
+server.registerTool(
+  "extract_images",
+  {
+    title: "Extract embedded images",
+    description:
+      "Pull embedded images out of a PDF and write each as a PNG. Unsupported pixel layouts (e.g. CMYK, palettized) are skipped and reported.",
+    inputSchema: extractImagesInput,
+  },
+  async (args) => handleExtractImages(args),
 );
 
 const transport = new StdioServerTransport();

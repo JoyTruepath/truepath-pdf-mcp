@@ -1,6 +1,6 @@
 {
   "name": "@truepathpdf/mcp-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Local-only MCP server for TruePath PDF — let your AI process PDFs on your Mac, files never leave your machine.",
   "type": "module",
   "bin": {
@@ -43,6 +43,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "@napi-rs/canvas": "^1.0.0",
+    "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^6.0.227",
     "zod": "^4.4.3"
   },
