@@ -36,7 +36,7 @@ await client.connect(transport);
 
 const tools = await client.listTools();
 const names = tools.tools.map((t) => t.name).sort();
-const expected = ["extract_images", "extract_text", "get_info", "merge", "pages", "search", "split", "to_images"];
+const expected = ["extract_images", "extract_text", "get_info", "merge", "open_in_truepath", "pages", "search", "split", "to_images"];
 console.log(`smoke: tools/list (${names.length}) → ${names.join(", ")}`);
 if (names.join(",") !== expected.join(",")) {
   throw new Error(`unexpected tool set: ${names.join(",")}`);
@@ -119,6 +119,27 @@ const exImg = parseJson(await call("extract_images", {
 console.log(`✓ extract_images extracted=${exImg.extractedCount}, skipped=${exImg.skippedCount}`);
 // (sample QSG may have 0 embedded images — accept either as long as it runs)
 
+// ---- 9. open_in_truepath ----
+// Only run if the TruePath PDF app is installed locally; otherwise log + skip.
+let openCheck = "skipped (no /Applications/TruePath PDF.app and no local Release build)";
+try {
+  const probe = await import("node:fs");
+  const candidates = [
+    "/Applications/TruePath PDF.app",
+    resolve(repoRoot, "..", "TruePathPDF", "build", "Release", "TruePath PDF.app"),
+  ];
+  const found = candidates.find(p => probe.existsSync(p));
+  if (found) {
+    const r = parseJson(await call("open_in_truepath", { path: samplePdf }));
+    if (!r.handedOff) throw new Error("open_in_truepath did not report handedOff");
+    openCheck = `OK (handoff URL = ${r.url.slice(0, 30)}…)`;
+    // Don't wait for the app — fire and forget per the contract.
+  }
+} catch (e) {
+  openCheck = `ERROR: ${e.message}`;
+}
+console.log(`✓ open_in_truepath ${openCheck}`);
+
 await client.close();
 rmSync(tmp, { recursive: true, force: true });
-console.log("\nsmoke: PASS — all 8 tools v0.1");
+console.log("\nsmoke: PASS — all 9 tools v0.3");

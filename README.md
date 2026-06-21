@@ -8,7 +8,9 @@ Built and maintained by [Joy Truepath Pte. Ltd.](https://joytruepath.com/), the 
 
 ## Status
 
-**v0.2 — free tier almost complete (8 of 9 tools).** Read + edit + rasterise: `get_info`, `extract_text`, `search`, `split`, `merge`, `pages`, `to_images`, `extract_images`. Remaining free tool — `open_in_truepath` (URL-scheme handoff to the Mac app) — lands in v0.3 alongside a v1.0.x app update. The full Pro tier (`redact`, `fill_form`, `flatten`, `sign`, `compress`, `annotate`, `autocrop`, `batch`, `ocr`) lands behind an Ed25519 license key in v0.4.
+**v0.3 — free tier complete (9 of 9 tools).** Read + edit + rasterise + GUI handoff: `get_info`, `extract_text`, `search`, `split`, `merge`, `pages`, `to_images`, `extract_images`, `open_in_truepath`. The full Pro tier (`redact`, `fill_form`, `flatten`, `sign`, `compress`, `annotate`, `autocrop`, `batch`, `ocr`) lands behind an Ed25519 license key in v0.4.
+
+`open_in_truepath` requires the [TruePath PDF Mac app](https://joytruepath.com/truepath-pdf) **v1.0.1 or newer** (the `truepath://` handler is added in 1.0.1; the v1.0.0 build does not register it).
 
 ## Privacy
 
@@ -103,10 +105,14 @@ Pull embedded images out of a PDF and write each as a PNG. Reports any images sk
 { "path": "/in.pdf", "outputDir": "/out" }
 ```
 
-## Roadmap
+### `open_in_truepath`
+Hand a local PDF to the TruePath PDF Mac app via `truepath://open?path=…`. Fire-and-forget: macOS launches (or routes to) the app, the URL handler opens the PDF. Use this after reading / analyzing in MCP to drop the user into the GUI for annotation, signing, redaction, etc.
+```
+{ "path": "/Users/you/Documents/report.pdf" }
+```
+Optional `scheme` param for re-branded engine builds (default `truepath`; the Yochen core build uses `yochenpdf`).
 
-### Free tier — one more landing in v0.3
-- `open_in_truepath` — hand a PDF off to the [TruePath PDF Mac app](https://joytruepath.com/truepath-pdf) via URL scheme (so you can finish a job in a GUI). Ships alongside a v1.0.x app update that registers the handler.
+## Roadmap
 
 ### Pro tier (v0.4, Ed25519 license key, offline verify)
 - `redact` — text-preserving redaction via PDFium (the same engine the Mac app uses; the words are removed from the file, not just covered)

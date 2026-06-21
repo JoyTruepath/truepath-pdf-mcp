@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 — 2026-06-21
+
+**Free tier complete — 9 of 9 tools.** Adds the GUI-handoff piece.
+
+- `open_in_truepath` — hand a local PDF to the [TruePath PDF Mac app](https://joytruepath.com/truepath-pdf) via its `truepath://open?path=…` URL scheme. Fire-and-forget: macOS launches (or routes to) the app and the in-app handler opens the file. Optional `scheme` param for re-branded engines (e.g. `yochenpdf` for the Yochen core build).
+
+Requires the TruePath PDF Mac app v1.0.1+ (the v1.0.0 build in the App Store does not register the `truepath://` handler — wait for the 1.0.1 update, or build from source).
+
+End-to-end verified: SDK Client → MCP `open_in_truepath` → `/usr/bin/open "truepath://open?path=…"` → app launches → PDF window appears.
+
 ## 0.2.0 — 2026-06-21
 
 **Free tier complete (8 of 9 tools).** Day-3/4 from the v1 plan: page-level editing and rasterisation.

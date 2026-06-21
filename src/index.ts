@@ -30,6 +30,7 @@ import { mergeInput, handleMerge } from "./tools/merge.js";
 import { pagesInput, handlePages } from "./tools/pages.js";
 import { toImagesInput, handleToImages } from "./tools/to-images.js";
 import { extractImagesInput, handleExtractImages } from "./tools/extract-images.js";
+import { openInTruepathInput, handleOpenInTruepath } from "./tools/open-in-truepath.js";
 
 // Read version from package.json so we report it consistently.
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -128,6 +129,17 @@ server.registerTool(
     inputSchema: extractImagesInput,
   },
   async (args) => handleExtractImages(args),
+);
+
+server.registerTool(
+  "open_in_truepath",
+  {
+    title: "Open in TruePath PDF (Mac app)",
+    description:
+      "Hand a local PDF to the TruePath PDF Mac app via its truepath:// URL scheme so the user can finish work in a GUI (annotate, sign, fill forms, redact). The bridge is fire-and-forget — the app handles opening from there. Requires the app installed (https://joytruepath.com/truepath-pdf).",
+    inputSchema: openInTruepathInput,
+  },
+  async (args) => handleOpenInTruepath(args),
 );
 
 const transport = new StdioServerTransport();
