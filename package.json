@@ -1,0 +1,53 @@
+{
+  "name": "@truepathpdf/mcp-server",
+  "version": "0.1.0",
+  "description": "Local-only MCP server for TruePath PDF — let your AI process PDFs on your Mac, files never leave your machine.",
+  "type": "module",
+  "bin": {
+    "truepath-pdf-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "smoke": "node scripts/smoke.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "mcp",
+    "pdf",
+    "model-context-protocol",
+    "anthropic",
+    "claude",
+    "truepath"
+  ],
+  "author": "Joy Truepath Pte. Ltd. <support@joytruepath.com>",
+  "license": "MIT",
+  "homepage": "https://joytruepath.com/truepath-pdf",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JoyTruepath/truepath-pdf-mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/JoyTruepath/truepath-pdf-mcp/issues",
+    "email": "support@joytruepath.com"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "pdfjs-dist": "^6.0.227",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0",
+    "typescript": "^6.0.3"
+  }
+}
