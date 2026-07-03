@@ -4,13 +4,13 @@
 
 `@truepathpdf/mcp-server` is a [Model Context Protocol](https://modelcontextprotocol.io/) server that lets Claude, Cursor, and any other MCP-aware client read and process PDF files on your machine — without uploading them anywhere.
 
-Built and maintained by [Joy Truepath Pte. Ltd.](https://joytruepath.com/), the team behind the [**TruePath PDF**](https://joytruepath.com/truepath-pdf) Mac app.
+Built and maintained by [Joy Truepath Pte. Ltd.](https://joytruepath.com/?utm_source=github&utm_medium=referral&utm_campaign=2026-07-pdf-readme), the team behind the [**TruePath PDF**](https://joytruepath.com/truepath-pdf?utm_source=github&utm_medium=referral&utm_campaign=2026-07-pdf-readme) Mac app.
 
 ## Status
 
 **v0.3 — free tier complete (9 of 9 tools).** Read + edit + rasterise + GUI handoff: `get_info`, `extract_text`, `search`, `split`, `merge`, `pages`, `to_images`, `extract_images`, `open_in_truepath`. The full Pro tier (`redact`, `fill_form`, `flatten`, `sign`, `compress`, `annotate`, `autocrop`, `batch`, `ocr`) lands behind an Ed25519 license key in v0.4.
 
-`open_in_truepath` requires the [TruePath PDF Mac app](https://joytruepath.com/truepath-pdf) **v1.0.1 or newer** (the `truepath://` handler is added in 1.0.1; the v1.0.0 build does not register it).
+`open_in_truepath` requires the [TruePath PDF Mac app](https://joytruepath.com/truepath-pdf?utm_source=github&utm_medium=referral&utm_campaign=2026-07-pdf-readme) **v1.0.1 or newer** (the `truepath://` handler is added in 1.0.1; the v1.0.0 build does not register it).
 
 ## Privacy
 
@@ -125,7 +125,7 @@ Optional `scheme` param for re-branded engine builds (default `truepath`; the Yo
 - `batch` — apply any tool across a glob of files
 - `ocr` — Apple Vision OCR (Mac only, on-device, CJK-strong)
 
-A buy-once Pro key will be available via [Lemon Squeezy](https://lemonsqueezy.com/) at launch (target: USD 29, includes 12 months of updates). Owners of the [TruePath PDF Mac app](https://joytruepath.com/truepath-pdf) will be able to redeem their App Store receipt for a Pro MCP key via an in-app button.
+A buy-once Pro key will be available via [Lemon Squeezy](https://lemonsqueezy.com/) at launch (target: USD 29, includes 12 months of updates). Owners of the [TruePath PDF Mac app](https://joytruepath.com/truepath-pdf?utm_source=github&utm_medium=referral&utm_campaign=2026-07-pdf-readme) will be able to redeem their App Store receipt for a Pro MCP key via an in-app button.
 
 ## License
 
