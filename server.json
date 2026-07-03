@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.JoyTruepath/truepath-pdf-mcp",
+  "title": "TruePath PDF",
+  "description": "Local-only PDF tools for AI — extract text, search, split/merge, render pages. Files never leave.",
+  "websiteUrl": "https://joytruepath.com/truepath-pdf",
+  "repository": {
+    "url": "https://github.com/JoyTruepath/truepath-pdf-mcp",
+    "source": "github"
+  },
+  "version": "0.3.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@truepathpdf/mcp-server",
+      "version": "0.3.0",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
