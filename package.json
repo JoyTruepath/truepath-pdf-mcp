@@ -37,7 +37,7 @@
   "homepage": "https://joytruepath.com/truepath-pdf",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JoyTruepath/truepath-pdf-mcp"
+    "url": "git+https://github.com/JoyTruepath/truepath-pdf-mcp.git"
   },
   "bugs": {
     "url": "https://github.com/JoyTruepath/truepath-pdf-mcp/issues",
