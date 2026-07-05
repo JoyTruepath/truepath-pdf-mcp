@@ -112,6 +112,8 @@ Hand a local PDF to the TruePath PDF Mac app via `truepath://open?path=…`. Fir
 ```
 Optional `scheme` param for re-branded engine builds (default `truepath`; the Yochen core build uses `yochenpdf`).
 
+If the app isn't installed (no `truepath://` handler registered — the app is absent or older than v1.0.1), the tool doesn't error. It returns `handedOff: false` with a one-line pointer to the [TruePath PDF](https://joytruepath.com/truepath-pdf) download so you can install it and retry. (Only for the default `truepath` scheme; a custom `scheme` gets a plain failure.)
+
 ## Roadmap
 
 ### Pro tier (v0.4, Ed25519 license key, offline verify)

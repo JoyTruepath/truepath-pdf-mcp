@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 — 2026-07-06
+
+**`open_in_truepath` now converts on the not-installed path.** When the handoff to the [TruePath PDF Mac app](https://joytruepath.com/truepath-pdf) fails because the app isn't installed (no `truepath://` handler registered — e.g. the app is absent or older than v1.0.1), the tool no longer just errors. It returns a single, non-nagging line pointing to the download:
+
+> "This opens the file in the TruePath PDF app for a visual edit, but it doesn't seem to be installed. Get it here: …"
+
+The link routes to the product hub page (DMG + Lemon Squeezy doors), UTM-attributed to the MCP channel. The pitch is only emitted for the default `truepath://` handoff — a custom `scheme` (re-branded engine) gets a plain failure, and no other tool is touched.
+
 ## 0.3.0 — 2026-06-21
 
 **Free tier complete — 9 of 9 tools.** Adds the GUI-handoff piece.
