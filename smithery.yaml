@@ -1,0 +1,10 @@
+# Smithery configuration — https://smithery.ai/docs/build/project-config/smithery.yaml
+# Local stdio server distributed via npm; runs with npx, no configuration required.
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+    additionalProperties: false
+  commandFunction: |-
+    (config) => ({ command: 'npx', args: ['-y', '@truepathpdf/mcp-server'] })
