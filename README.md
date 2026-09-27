@@ -30,7 +30,7 @@ npm install -g @truepathpdf/mcp-server
 truepath-pdf-mcp
 ```
 
-Requires Node.js 20 or newer.
+Requires Node.js 22.13 or newer (PDF.js 6 needs it).
 
 ## Hook up to Claude Desktop
 

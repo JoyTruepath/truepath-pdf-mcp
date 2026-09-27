@@ -24,6 +24,9 @@ rm -rf dist node_modules
 npm install
 
 # 2. build + smoke (asserts all 9 tools work end-to-end)
+#    If TruePath PDF is installed, step 9 really opens it with the sample PDF.
+#    SMOKE_SKIP_OPEN=1 skips that step; the summary then says "8 of 9".
+#    Run the full 9 at least once before publishing.
 npm run build
 node scripts/smoke.mjs   # PASS required
 

@@ -1,12 +1,18 @@
 #!/usr/bin/env node
 /**
  * Smoke test — spawn the built MCP server, talk over stdio via the official
- * SDK Client, list tools, then call each of the 8 v0.1 tools against a
- * sample PDF. Asserts response shapes and minimum content. Exits non-zero on
- * any failure so this can drop into CI later.
+ * SDK Client, list tools, then call each of the 9 tools against a sample PDF.
+ * Asserts response shapes and minimum content. Exits non-zero on any failure
+ * so this can drop into CI later.
+ *
+ * Step 9 (open_in_truepath) REALLY opens the TruePath PDF app with the sample
+ * PDF when the app is installed. Set SMOKE_SKIP_OPEN=1 to skip that step
+ * (headless runs, or when you don't want a window to appear); the summary
+ * then says 8 of 9 tools instead of claiming all 9.
  *
  * Usage:
  *   node scripts/smoke.mjs [path/to/sample.pdf]
+ *   SMOKE_SKIP_OPEN=1 node scripts/smoke.mjs [path/to/sample.pdf]
  */
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -120,9 +126,16 @@ console.log(`✓ extract_images extracted=${exImg.extractedCount}, skipped=${exI
 // (sample QSG may have 0 embedded images — accept either as long as it runs)
 
 // ---- 9. open_in_truepath ----
-// Only run if the TruePath PDF app is installed locally; otherwise log + skip.
-let openCheck = "skipped (no /Applications/TruePath PDF.app and no local Release build)";
-try {
+// Only run if the TruePath PDF app is installed locally and SMOKE_SKIP_OPEN is
+// not set; otherwise log + skip. An error here FAILS the smoke (it used to be
+// printed as "✓ … ERROR" and still reported PASS).
+const skipOpen = process.env.SMOKE_SKIP_OPEN === "1";
+let openCheck = skipOpen
+  ? "skipped (SMOKE_SKIP_OPEN=1)"
+  : "skipped (no /Applications/TruePath PDF.app and no local Release build)";
+let openRan = false;
+let openFailed = false;
+if (!skipOpen) try {
   const probe = await import("node:fs");
   const candidates = [
     "/Applications/TruePath PDF.app",
@@ -130,16 +143,24 @@ try {
   ];
   const found = candidates.find(p => probe.existsSync(p));
   if (found) {
+    openRan = true;
     const r = parseJson(await call("open_in_truepath", { path: samplePdf }));
     if (!r.handedOff) throw new Error("open_in_truepath did not report handedOff");
     openCheck = `OK (handoff URL = ${r.url.slice(0, 30)}…)`;
     // Don't wait for the app — fire and forget per the contract.
   }
 } catch (e) {
+  openFailed = true;
   openCheck = `ERROR: ${e.message}`;
 }
-console.log(`✓ open_in_truepath ${openCheck}`);
+console.log(`${openFailed ? "✗" : "✓"} open_in_truepath ${openCheck}`);
 
 await client.close();
 rmSync(tmp, { recursive: true, force: true });
-console.log("\nsmoke: PASS — all 9 tools v0.3");
+if (openFailed) {
+  console.log("\nsmoke: FAIL — open_in_truepath errored");
+  process.exit(1);
+}
+console.log(openRan
+  ? "\nsmoke: PASS — all 9 tools v0.3"
+  : "\nsmoke: PASS — 8 of 9 tools v0.3 (open_in_truepath skipped)");
