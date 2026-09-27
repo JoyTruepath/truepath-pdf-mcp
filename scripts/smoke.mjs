@@ -6,13 +6,16 @@
  * so this can drop into CI later.
  *
  * Step 9 (open_in_truepath) REALLY opens the TruePath PDF app with the sample
- * PDF when the app is installed. Set SMOKE_SKIP_OPEN=1 to skip that step
- * (headless runs, or when you don't want a window to appear); the summary
- * then says 8 of 9 tools instead of claiming all 9.
+ * PDF when the app is installed. Set SMOKE_SKIP_OPEN=1 (any value but "0" or
+ * "false") to skip that step, e.g. for headless runs or when you don't want a
+ * window to appear; the summary then says 8 of 9 tools instead of claiming
+ * all 9. Set SMOKE_REQUIRE_OPEN=1 for a release check: then a skipped step 9
+ * (flag set, or app not installed) is a FAIL, not a PASS.
  *
  * Usage:
  *   node scripts/smoke.mjs [path/to/sample.pdf]
  *   SMOKE_SKIP_OPEN=1 node scripts/smoke.mjs [path/to/sample.pdf]
+ *   SMOKE_REQUIRE_OPEN=1 node scripts/smoke.mjs [path/to/sample.pdf]
  */
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -52,8 +55,15 @@ function call(name, args) {
   return client.callTool({ name, arguments: args });
 }
 function parseJson(res) {
+  // A tool error comes back as isError with plain text, not JSON; surface the
+  // tool's own message instead of a JSON parse error.
+  if (res.isError) throw new Error(res.content?.[0]?.text ?? "tool returned isError");
   return JSON.parse(res.content[0].text);
 }
+const envFlag = (name) => {
+  const v = (process.env[name] ?? "").trim().toLowerCase();
+  return v !== "" && v !== "0" && v !== "false" && v !== "no";
+};
 
 // ---- 1. get_info ----
 const info = parseJson(await call("get_info", { path: samplePdf }));
@@ -129,9 +139,10 @@ console.log(`✓ extract_images extracted=${exImg.extractedCount}, skipped=${exI
 // Only run if the TruePath PDF app is installed locally and SMOKE_SKIP_OPEN is
 // not set; otherwise log + skip. An error here FAILS the smoke (it used to be
 // printed as "✓ … ERROR" and still reported PASS).
-const skipOpen = process.env.SMOKE_SKIP_OPEN === "1";
+const skipOpen = envFlag("SMOKE_SKIP_OPEN");
+const requireOpen = envFlag("SMOKE_REQUIRE_OPEN");
 let openCheck = skipOpen
-  ? "skipped (SMOKE_SKIP_OPEN=1)"
+  ? `skipped (SMOKE_SKIP_OPEN=${process.env.SMOKE_SKIP_OPEN})`
   : "skipped (no /Applications/TruePath PDF.app and no local Release build)";
 let openRan = false;
 let openFailed = false;
@@ -145,7 +156,11 @@ if (!skipOpen) try {
   if (found) {
     openRan = true;
     const r = parseJson(await call("open_in_truepath", { path: samplePdf }));
-    if (!r.handedOff) throw new Error("open_in_truepath did not report handedOff");
+    if (!r.handedOff) {
+      const why = [r.message, r.detail, r.exitCode !== undefined ? `exit ${r.exitCode}` : ""]
+        .filter(Boolean).join(" | ");
+      throw new Error(`open_in_truepath did not report handedOff${why ? `: ${why}` : ""}`);
+    }
     openCheck = `OK (handoff URL = ${r.url.slice(0, 30)}…)`;
     // Don't wait for the app — fire and forget per the contract.
   }
@@ -159,6 +174,10 @@ await client.close();
 rmSync(tmp, { recursive: true, force: true });
 if (openFailed) {
   console.log("\nsmoke: FAIL — open_in_truepath errored");
+  process.exit(1);
+}
+if (requireOpen && !openRan) {
+  console.log("\nsmoke: FAIL — SMOKE_REQUIRE_OPEN is set but open_in_truepath was skipped");
   process.exit(1);
 }
 console.log(openRan

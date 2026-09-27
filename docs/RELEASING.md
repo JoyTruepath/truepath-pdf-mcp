@@ -24,11 +24,12 @@ rm -rf dist node_modules
 npm install
 
 # 2. build + smoke (asserts all 9 tools work end-to-end)
-#    If TruePath PDF is installed, step 9 really opens it with the sample PDF.
-#    SMOKE_SKIP_OPEN=1 skips that step; the summary then says "8 of 9".
-#    Run the full 9 at least once before publishing.
+#    Step 9 really opens TruePath PDF with the sample PDF, so this needs the
+#    app installed (v1.0.1+, which registers truepath://). SMOKE_REQUIRE_OPEN=1
+#    makes a skipped step 9 a FAIL, so the release check can't pass on 8 of 9.
+#    (For a quick run that doesn't open the app: SMOKE_SKIP_OPEN=1 → "8 of 9".)
 npm run build
-node scripts/smoke.mjs   # PASS required
+SMOKE_REQUIRE_OPEN=1 node scripts/smoke.mjs   # "PASS — all 9" required
 
 # 3. dry-run the tarball — verify exactly what ships
 npm pack --dry-run
