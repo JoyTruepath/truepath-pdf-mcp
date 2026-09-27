@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.2 — 2026-09-27
+
+**Security update — upgrade recommended.** No tool changes.
+
+- **`pdfjs-dist` 6.0.227 → 6.3.289** ([GHSA-hq66-cqwq-w95j](https://github.com/advisories/GHSA-hq66-cqwq-w95j): arbitrary JavaScript execution upon opening a malicious PDF; affects `>=5.6.83 <6.2.108`; severity high). This server opens whatever PDF your AI client points it at, so this is the one that matters. The minimum is now `^6.3.289`, so a fresh `npx` install can't resolve to an affected version.
+- **`@modelcontextprotocol/sdk` 1.29.0 → 1.30.1**, and the lockfile moved its transitive dependencies to patched releases: `fast-uri` and `ip-address` (high), `hono`, `@hono/node-server` and `qs` (moderate). They come in through the SDK (its HTTP transport, rate limiter and JSON-schema validator), not this server's own code; `npm audit` now reports 0 vulnerabilities.
+- Verified with the release checklist: clean install, build, and the 9-tool smoke test. The eight file tools return identical results to 0.3.1 on the sample document.
+
 ## 0.3.1 — 2026-07-06
 
 **`open_in_truepath` now converts on the not-installed path.** When the handoff to the [TruePath PDF Mac app](https://joytruepath.com/truepath-pdf) fails because the app isn't installed (no `truepath://` handler registered — e.g. the app is absent or older than v1.0.1), the tool no longer just errors. It returns a single, non-nagging line pointing to the download:
